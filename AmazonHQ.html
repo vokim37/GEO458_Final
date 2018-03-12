@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>Points on a map</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+body {
+	  margin: 0;
+	  padding: 0;
+	}
+	h2,h3 {
+	  margin: 10px;
+	  font-size: 1.2em;
+	}
+	h3 {
+	  font-size: 1em;
+	}
+	p {
+	  font-size: 0.85em;
+	  margin: 10px;
+	  text-align: left;
+	}
+	#map {
+	  position: absolute;
+	  top: 0;
+	  bottom: 0;
+	  width: 100%;
+	}
+
+	.map-overlay {
+	  position: absolute;
+	  bottom: 0;
+	  right: 0;
+	  background: rgba(255, 255, 255, 1);
+	  margin-right: 20px;
+	  font-family: Arial, sans-serif;
+	  overflow: auto;
+	  border-radius: 3px;
+	}
+	#features {
+	  top: 0;
+	  height: 70px;
+	  margin-top: 20px;
+	  width: 300px;
+	}
+    </style>
+  </head>
+  <body>
+    <div id='map'></div>
+	<div class='map-overlay' id='features'><h2>Amazon Headquarter</h2><div id='pd'><p>Hover over a block!</p></div></div>
+	<div class='map-overlay' id='legend'></div>
+    <script>
+    mapboxgl.accessToken = 'pk.eyJ1Ijoia2ltdm8zNyIsImEiOiJjamNmcDA0OTUxYnY3MnF0OWhzZ2EyMHdyIn0.XV_h-ls11Cz85kVYhdx5Yg'; // replace this with your access token
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/kimvo37/cjeka8uc92c2x2so469htzucu' // replace this with your style URL
+    });
+    map.on('mousemove', function(e) {
+	  var amazonhq = map.queryRenderedFeatures(e.point, {
+		layers: ['amazonblock-3ftjhw']
+	  });
+	  if (amazonhq.length > 0) {
+		document.getElementById('pd').innerHTML = '<h3><strong>Total employees: '+ amazonhq[0].properties.TOTAL_JOBS + '</strong></h3>';
+	  } else {
+		document.getElementById('pd').innerHTML = '<h3> Hover over a block! </h3>';
+	  }
+	});
+    </script>
+  </body>
+</html>

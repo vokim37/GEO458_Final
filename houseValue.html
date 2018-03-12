@@ -1,0 +1,120 @@
+<script src='https://api.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' />
+<div id='map'></div>
+<div class='map-overlay' id='features'><h2>Amazon Worker Housing Value</h2><div id='pd'><p>Hover over a block!</p></div></div>
+<div class='map-overlay' id='legend'></div>
+<style>
+	body {
+	  margin: 0;
+	  padding: 0;
+	}
+
+	h2,h3 {
+	  margin: 10px;
+	  font-size: 1.2em;
+	}
+
+	h3 {
+	  font-size: 1em;
+	}
+
+	p {
+	  font-size: 0.85em;
+	  margin: 10px;
+	  text-align: left;
+	}
+
+	/**
+	* Create a position for the map
+	* on the page */
+	#map {
+	  position: absolute;
+	  top: 0;
+	  bottom: 0;
+	  width: 100%;
+	}
+
+	/**
+	* Set rules for how the map overlays
+	* (info box and legend) will be displayed
+	* on the page. */
+	.map-overlay {
+	  position: absolute;
+	  bottom: 0;
+	  right: 0;
+	  background: rgba(255, 255, 255, 1);
+	  margin-right: 20px;
+	  font-family: Arial, sans-serif;
+	  overflow: auto;
+	  border-radius: 3px;
+	}
+
+	#features {
+	  top: 0;
+	  height: 100px;
+	  margin-top: 20px;
+	  width: 350px;
+	}
+
+	#legend {
+	  padding: 10px;
+	  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+	  line-height: 18px;
+	  height: 100px;
+	  margin-bottom: 40px;
+	  width: 200px;
+	}
+
+	.legend-key {
+	  display: inline-block;
+	  border-radius: 20%;
+	  width: 20px;
+	  height: 20px;
+	  margin-right: 5px;
+	}
+</style>
+
+<script>
+
+// define access token
+mapboxgl.accessToken = 'pk.eyJ1IjoiaGVucnl2dCIsImEiOiJjamUwYW9seTY1NGZtMnhxcGk2NTJoOTB6In0.yIRFQ3dfik_hdh3wAchN6Q';
+
+//create map
+var map = new mapboxgl.Map({
+    container: 'map', // container id
+    style: 'mapbox://styles/henryvt/cjej652qc2rqd2sms4yelydzi' // map style URL from Mapbox Studio
+});
+
+map.on('load', function() {
+  var layers = ['No Value', '1-338,000', '338,000-630,000', '630,000-2,000,000'];
+  var colors = ['#d7cbcb', '#08f744', '#f6e30e', '#f11313'];
+  for (i = 0; i < layers.length; i++) {
+	  var layer = layers[i];
+	  var color = colors[i];
+	  var item = document.createElement('div');
+	  var key = document.createElement('span');
+	  key.className = 'legend-key';
+	  key.style.backgroundColor = color;
+
+	  var value = document.createElement('span');
+	  value.innerHTML = layer;
+	  item.appendChild(key);
+	  item.appendChild(value);
+	  legend.appendChild(item);
+	}
+	map.on('mousemove', function(e) {
+  var blocks = map.queryRenderedFeatures(e.point, {
+		layers: ['housevalueblocks-6sumjt']
+	  });
+
+	  if (blocks.length > 0) {
+		document.getElementById('pd').innerHTML = '<h3><strong>' + '</strong> Median Block House Value: $</em>'+ blocks[0].properties.B25077e1 + '</strong></h3><p><strong><em>' +'</strong> Total Amazon Workers in Block: </em>'+ blocks[0].properties.TOTAL_JOBS;
+	  } else {
+		document.getElementById('pd').innerHTML = '<p>Hover over a block!</p>';
+	  }
+	});
+});
+map.getCanvas().style.cursor = 'default';
+
+
+</script>
